@@ -1,64 +1,140 @@
 import { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import api from "../utils/api";
+import * as auth from "../utils/auth";
 import Header from "./Header/Header";
-import Login from "./Login/Login";
-import Register from "./Register/Register";
 import Main from "./Main/Main";
 import Footer from "./Footer/Footer";
+import Login from "./Login/Login";
+import Register from "./Register/Register";
+import InfoTooltip from "./InfoTooltip/InfoTooltip";
 
 function App() {
+  const navigate = useNavigate();
+
   const [currentUser, setCurrentUser] = useState({});
-
-  const [popup, setPopup] = useState(null);
-
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [email, setEmail] = useState("");
   const [cards, setCards] = useState([]);
+  const [popup, setPopup] = useState(null);
+  const [tooltip, setTooltip] = useState({ isOpen: false, isSuccess: true });
 
-  async function handleCardLike(card) {
-    const isLiked = card.isLiked;
+  const getToken = () => localStorage.getItem("jwt");
+
+  // === Montagem: verifica token e carrega cards ===
+  useEffect(() => {
+    const jwt = getToken();
+    if (!jwt) return;
+
+    auth
+      .checkToken(jwt)
+      .then((res) => {
+        setIsLoggedIn(true);
+        setEmail(res.data.email);
+        setCurrentUser(res.data);
+        return api.getInitialCards(jwt);
+      })
+      .then((cardsData) => {
+        setCards(cardsData);
+      })
+      .catch((err) => {
+        console.error(err);
+        localStorage.removeItem("jwt");
+      });
+  }, []);
+
+  // === Auth ===
+  const handleRegister = ({ email: userEmail, password }) => {
+    auth
+      .register(userEmail, password)
+      .then(() => {
+        setTooltip({ isOpen: true, isSuccess: true });
+        setTimeout(() => {
+          setTooltip({ isOpen: false, isSuccess: true });
+          navigate("/signin");
+        }, 1500);
+      })
+      .catch((err) => {
+        console.error(err);
+        setTooltip({ isOpen: true, isSuccess: false });
+      });
+  };
+
+  const handleLogin = ({ email: userEmail, password }) => {
+    auth
+      .authorize(userEmail, password)
+      .then((data) => {
+        if (!data.token) throw new Error("Token não recebido");
+        localStorage.setItem("jwt", data.token);
+        return auth.checkToken(data.token);
+      })
+      .then((res) => {
+        setIsLoggedIn(true);
+        setEmail(res.data.email);
+        setCurrentUser(res.data);
+        return api.getInitialCards(getToken());
+      })
+      .then((cardsData) => {
+        setCards(cardsData);
+        navigate("/");
+      })
+      .catch((err) => {
+        console.error(err);
+        setTooltip({ isOpen: true, isSuccess: false });
+      });
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem("jwt");
+    setIsLoggedIn(false);
+    setCurrentUser({});
+    setEmail("");
+    setCards([]);
+    navigate("/signin");
+  };
+
+  // === Cards ===
+  const handleCardLike = async (card) => {
     try {
-      const newCard = await api.changeLikeCardStatus(card._id, !isLiked);
+      const newCard = await api.changeLikeCardStatus(
+        card._id,
+        !card.isLiked,
+        getToken(),
+      );
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
-  async function handleCardDelete(card) {
+  const handleCardDelete = async (card) => {
     try {
-      await api.deleteCard(card._id);
+      await api.deleteCard(card._id, getToken());
       setCards((state) => state.filter((c) => c._id !== card._id));
     } catch (err) {
       console.error(err);
     }
-  }
-
-  const handleOpenPopup = (popupConfig) => {
-    setPopup(popupConfig);
   };
 
-  const handleClosePopup = () => {
-    setPopup(null);
+  const handleAddPlaceSubmit = async (data) => {
+    try {
+      const newCard = await api.addCard(data.name, data.link, getToken());
+      setCards([newCard, ...cards]);
+      handleClosePopup();
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  useEffect(() => {
-    api
-      .getUserInfo()
-      .then((data) => setCurrentUser(data))
-      .catch((err) => console.error(err));
-  }, []);
+  // === Pop-ups ===
+  const handleOpenPopup = (popupConfig) => setPopup(popupConfig);
+  const handleClosePopup = () => setPopup(null);
 
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => setCards(data))
-      .catch((err) => console.error(err));
-  }, []);
-
+  // === Perfil (esperado falhar no backend atual — instruções §5) ===
   const handleUpdateUser = async (data) => {
     try {
-      const newUser = await api.editProfile(data.name, data.about);
+      const newUser = await api.editProfile(data.name, data.about, getToken());
       setCurrentUser(newUser);
       handleClosePopup();
     } catch (err) {
@@ -68,7 +144,7 @@ function App() {
 
   const handleUpdateAvatar = async (data) => {
     try {
-      const newUser = await api.editAvatar(data.avatar);
+      const newUser = await api.editAvatar(data.avatar, getToken());
       setCurrentUser(newUser);
       handleClosePopup();
     } catch (err) {
@@ -76,30 +152,16 @@ function App() {
     }
   };
 
-  const handleAddPlaceSubmit = async (data) => {
-    try {
-      const newCard = await api.addCard(data.name, data.link);
-      setCards([newCard, ...cards]);
-      handleClosePopup();
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const handleLogin = ({ email, password }) => {
-    console.log("[TODO Bloco 4] login:", email, password);
-  };
-
-  const handleRegister = ({ email, password }) => {
-    console.log("[TODO Bloco 4] register:", email, password);
-  };
-
   return (
     <CurrentUserContext.Provider
       value={{ currentUser, handleUpdateUser, handleUpdateAvatar }}
     >
       <div className="page__content">
-        <Header />
+        <Header
+          email={email}
+          isLoggedIn={isLoggedIn}
+          onSignOut={handleSignOut}
+        />
         <Routes>
           <Route
             path="/"
@@ -122,6 +184,11 @@ function App() {
           />
         </Routes>
         <Footer />
+        <InfoTooltip
+          isOpen={tooltip.isOpen}
+          isSuccess={tooltip.isSuccess}
+          onClose={() => setTooltip({ isOpen: false, isSuccess: true })}
+        />
       </div>
     </CurrentUserContext.Provider>
   );

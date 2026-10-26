@@ -4,98 +4,77 @@ class Api {
     this._headers = headers;
   }
 
-  _request(endpoint, options = {}) {
+  _request(endpoint, options = {}, token) {
     const url = this._baseUrl + endpoint;
 
-    const mergedOptions = {
-      ...options,
-      headers: {
-        ...this._headers,
-        ...options.headers,
+    const headers = { ...this._headers, ...options.headers };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
+    return fetch(url, { ...options, headers })
+      .then((res) =>
+        res.ok ? res.json() : Promise.reject(`Erro: ${res.status}`),
+      )
+      .catch((err) => Promise.reject(err.message || err));
+  }
+
+  getInitialCards(token) {
+    return this._request("/cards", {}, token);
+  }
+
+  editProfile(name, about, token) {
+    return this._request(
+      "/users/me",
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, about }),
       },
-    };
-
-    return fetch(url, mergedOptions)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw new Error(`Erro: ${res.status}`);
-      })
-      .catch((err) => {
-        return Promise.reject(err.message);
-      });
+      token,
+    );
   }
 
-  getUserInfo() {
-    return this._request("/users/me");
-  }
-
-  getInitialCards() {
-    return this._request("/cards");
-  }
-
-  editProfile(name, about) {
-    return this._request("/users/me", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
+  addCard(name, link, token) {
+    return this._request(
+      "/cards",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, link }),
       },
-      body: JSON.stringify({ name, about }),
-    });
+      token,
+    );
   }
 
-  addCard(name, link) {
-    return this._request("/cards", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+  deleteCard(cardId, token) {
+    return this._request(`/cards/${cardId}`, { method: "DELETE" }, token);
+  }
+
+  changeLikeCardStatus(cardId, isLiked, token) {
+    return this._request(
+      `/cards/${cardId}/likes`,
+      { method: isLiked ? "PUT" : "DELETE" },
+      token,
+    );
+  }
+
+  editAvatar(avatar, token) {
+    return this._request(
+      "/users/me/avatar",
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ avatar }),
       },
-      body: JSON.stringify({ name, link }),
-    });
-  }
-
-  deleteCard(cardId) {
-    return this._request(`/cards/${cardId}`, {
-      method: "DELETE",
-    });
-  }
-
-  likeCard(cardId) {
-    return this._request(`/cards/${cardId}/likes`, {
-      method: "PUT",
-    });
-  }
-
-  unlikeCard(cardId) {
-    return this._request(`/cards/${cardId}/likes`, {
-      method: "DELETE",
-    });
-  }
-
-  changeLikeCardStatus(cardId, isLiked) {
-    return this._request(`/cards/${cardId}/likes`, {
-      method: isLiked ? "PUT" : "DELETE",
-    });
-  }
-
-  editAvatar(avatar) {
-    return this._request("/users/me/avatar", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ avatar }),
-    });
+      token,
+    );
   }
 }
 
 const api = new Api({
-  baseUrl: "https://around-api.pt-br.tripleten-services.com/v1",
-  headers: {
-    authorization: "f11d5d51-05fd-4a2f-b012-59e641f939f7",
-    "Content-Type": "application/json",
-  },
+  baseUrl: "https://se-register-api.en.tripleten-services.com/v1",
+  headers: { "Content-Type": "application/json" },
 });
 
 export default api;
