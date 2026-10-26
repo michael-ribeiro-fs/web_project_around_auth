@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Routes, Route } from "react-router-dom";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 import Header from "./Header/Header";
@@ -89,15 +90,24 @@ function App() {
     >
       <div className="page__content">
         <Header />
-        <Main
-          popup={popup}
-          onOpenPopup={handleOpenPopup}
-          onClosePopup={handleClosePopup}
-          cards={cards}
-          onCardLike={handleCardLike}
-          onCardDelete={handleCardDelete}
-          onAddPlaceSubmit={handleAddPlaceSubmit}
-        />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <Main
+                popup={popup}
+                onOpenPopup={handleOpenPopup}
+                onClosePopup={handleClosePopup}
+                cards={cards}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                onAddPlaceSubmit={handleAddPlaceSubmit}
+              />
+            }
+          />
+          <Route path="/signin" element={<div>Placeholder Login</div>} />
+          <Route path="/signup" element={<div>Placeholder Register</div>} />
+        </Routes>
         <Footer />
       </div>
     </CurrentUserContext.Provider>
