@@ -19,7 +19,7 @@ function Popup({ title, children, onClose, contentClassName }) {
     }
   };
 
-  const contentClasses = `popup__content ${!title ? "popup__content_content_image" : ""} ${contentClassName || ""}`;
+  const contentClasses = `popup__content ${title === null ? "popup__content_content_image" : ""} ${contentClassName || ""}`;
 
   return (
     <div className="popup popup_is-opened" onClick={handleOverlayClick}>
