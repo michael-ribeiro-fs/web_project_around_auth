@@ -9,6 +9,7 @@ import Footer from "./Footer/Footer";
 import Login from "./Login/Login";
 import Register from "./Register/Register";
 import InfoTooltip from "./InfoTooltip/InfoTooltip";
+import ProtectedRoute from "./ProtectedRoute/ProtectedRoute";
 
 function App() {
   const navigate = useNavigate();
@@ -19,13 +20,17 @@ function App() {
   const [cards, setCards] = useState([]);
   const [popup, setPopup] = useState(null);
   const [tooltip, setTooltip] = useState({ isOpen: false, isSuccess: true });
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   const getToken = () => localStorage.getItem("jwt");
 
   // === Montagem: verifica token e carrega cards ===
   useEffect(() => {
     const jwt = getToken();
-    if (!jwt) return;
+    if (!jwt) {
+      setIsAuthChecked(true);
+      return;
+    }
 
     auth
       .checkToken(jwt)
@@ -41,6 +46,9 @@ function App() {
       .catch((err) => {
         console.error(err);
         localStorage.removeItem("jwt");
+      })
+      .finally(() => {
+        setIsAuthChecked(true);
       });
   }, []);
 
@@ -162,27 +170,31 @@ function App() {
           isLoggedIn={isLoggedIn}
           onSignOut={handleSignOut}
         />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Main
-                popup={popup}
-                onOpenPopup={handleOpenPopup}
-                onClosePopup={handleClosePopup}
-                cards={cards}
-                onCardLike={handleCardLike}
-                onCardDelete={handleCardDelete}
-                onAddPlaceSubmit={handleAddPlaceSubmit}
-              />
-            }
-          />
-          <Route path="/signin" element={<Login onLogin={handleLogin} />} />
-          <Route
-            path="/signup"
-            element={<Register onRegister={handleRegister} />}
-          />
-        </Routes>
+        {!isAuthChecked ? null : (
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute isLoggedIn={isLoggedIn}>
+                  <Main
+                    popup={popup}
+                    onOpenPopup={handleOpenPopup}
+                    onClosePopup={handleClosePopup}
+                    cards={cards}
+                    onCardLike={handleCardLike}
+                    onCardDelete={handleCardDelete}
+                    onAddPlaceSubmit={handleAddPlaceSubmit}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/signin" element={<Login onLogin={handleLogin} />} />
+            <Route
+              path="/signup"
+              element={<Register onRegister={handleRegister} />}
+            />
+          </Routes>
+        )}
         <Footer />
         <InfoTooltip
           isOpen={tooltip.isOpen}
