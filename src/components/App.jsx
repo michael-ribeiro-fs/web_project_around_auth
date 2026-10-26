@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import api from "../utils/api";
 import Header from "./Header/Header";
+import Login from "./Login/Login";
+import Register from "./Register/Register";
 import Main from "./Main/Main";
 import Footer from "./Footer/Footer";
 
@@ -84,6 +86,14 @@ function App() {
     }
   };
 
+  const handleLogin = ({ email, password }) => {
+    console.log("[TODO Bloco 4] login:", email, password);
+  };
+
+  const handleRegister = ({ email, password }) => {
+    console.log("[TODO Bloco 4] register:", email, password);
+  };
+
   return (
     <CurrentUserContext.Provider
       value={{ currentUser, handleUpdateUser, handleUpdateAvatar }}
@@ -105,8 +115,11 @@ function App() {
               />
             }
           />
-          <Route path="/signin" element={<div>Placeholder Login</div>} />
-          <Route path="/signup" element={<div>Placeholder Register</div>} />
+          <Route path="/signin" element={<Login onLogin={handleLogin} />} />
+          <Route
+            path="/signup"
+            element={<Register onRegister={handleRegister} />}
+          />
         </Routes>
         <Footer />
       </div>
