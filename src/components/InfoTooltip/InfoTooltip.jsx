@@ -17,7 +17,7 @@ function InfoTooltip({ isOpen, isSuccess, onClose }) {
         />
         <p className="info-tooltip__text">
           {isSuccess
-            ? "Vitória! Você precisa se registrar ou fazer login."
+            ? "Vitória! Agora você está registrado."
             : "Ops, algo saiu de errado! Por favor, tente novamente."}
         </p>
       </div>

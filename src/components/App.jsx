@@ -37,14 +37,17 @@ function App() {
       .then((res) => {
         setIsLoggedIn(true);
         setEmail(res.data.email);
-        setCurrentUser(res.data);
-        return api.getInitialCards(jwt);
+        return api.getUserInfo();
+      })
+      .then((userData) => {
+        setCurrentUser(userData);
+        return api.getInitialCards();
       })
       .then((cardsData) => {
         setCards(cardsData);
       })
       .catch((err) => {
-        console.error(err);
+        console.error("[useEffect-mount]", err);
         localStorage.removeItem("jwt");
       })
       .finally(() => {
@@ -80,15 +83,20 @@ function App() {
       .then((res) => {
         setIsLoggedIn(true);
         setEmail(res.data.email);
-        setCurrentUser(res.data);
-        return api.getInitialCards(getToken());
+        // Busca perfil completo no around-api (Sprint 14)
+        return api.getUserInfo();
+      })
+      .then((userData) => {
+        setCurrentUser(userData);
+        // Busca cards no around-api (Sprint 14)
+        return api.getInitialCards();
       })
       .then((cardsData) => {
         setCards(cardsData);
         navigate("/");
       })
       .catch((err) => {
-        console.error(err);
+        console.error("[handleLogin]", err);
         setTooltip({ isOpen: true, isSuccess: false });
       });
   };
@@ -105,33 +113,29 @@ function App() {
   // === Cards ===
   const handleCardLike = async (card) => {
     try {
-      const newCard = await api.changeLikeCardStatus(
-        card._id,
-        !card.isLiked,
-        getToken(),
-      );
+      const newCard = await api.changeLikeCardStatus(card._id, !card.isLiked);
       setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
     } catch (err) {
-      console.error(err);
+      console.error("[handleCardLike]", err);
     }
   };
 
   const handleCardDelete = async (card) => {
     try {
-      await api.deleteCard(card._id, getToken());
+      await api.deleteCard(card._id);
       setCards((state) => state.filter((c) => c._id !== card._id));
     } catch (err) {
-      console.error(err);
+      console.error("[handleCardDelete]", err);
     }
   };
 
   const handleAddPlaceSubmit = async (data) => {
     try {
-      const newCard = await api.addCard(data.name, data.link, getToken());
+      const newCard = await api.addCard(data.name, data.link);
       setCards([newCard, ...cards]);
       handleClosePopup();
     } catch (err) {
-      console.error(err);
+      console.error("[handleAddPlaceSubmit]", err);
     }
   };
 
@@ -142,21 +146,21 @@ function App() {
   // === Perfil (esperado falhar no backend atual — instruções §5) ===
   const handleUpdateUser = async (data) => {
     try {
-      const newUser = await api.editProfile(data.name, data.about, getToken());
+      const newUser = await api.editProfile(data.name, data.about);
       setCurrentUser(newUser);
       handleClosePopup();
     } catch (err) {
-      console.error(err);
+      console.error("[handleUpdateUser]", err);
     }
   };
 
   const handleUpdateAvatar = async (data) => {
     try {
-      const newUser = await api.editAvatar(data.avatar, getToken());
+      const newUser = await api.editAvatar(data.avatar);
       setCurrentUser(newUser);
       handleClosePopup();
     } catch (err) {
-      console.error(err);
+      console.error("[handleUpdateAvatar]", err);
     }
   };
 
