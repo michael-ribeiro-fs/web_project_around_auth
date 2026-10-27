@@ -1,10 +1,18 @@
+/* === DESKTOP (padrão) === */
 .header {
   min-height: 120px;
   font-family: "Inter", Arial, sans-serif;
   display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+}
+
+.header__bar {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  flex: 1;
+  width: 100%;
 }
 
 .header__logo {
@@ -13,7 +21,6 @@
   object-fit: contain;
 }
 
-/* Área de usuário logado (email + botão Sair) */
 .header__user {
   display: flex;
   align-items: center;
@@ -28,6 +35,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  font-family: "Inter", Arial, sans-serif;
+  font-weight: 400;
 }
 
 .header__signout {
@@ -46,12 +55,15 @@
   color: #fff;
 }
 
-/* Link de navegação em rotas de autenticação (Entrar / Inscrever-se) */
 .header__link {
+  min-width: 103px;
   color: #fff;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 18px;
+  font-weight: 400;
   line-height: 22px;
   text-decoration: none;
+  text-align: right;
   transition: opacity 0.2s ease;
 }
 
@@ -59,29 +71,89 @@
   opacity: 0.6;
 }
 
+.header__hamburger,
+.header__mobile-menu {
+  display: none;
+}
+
+/* === MOBILE (320×568) === */
 @media screen and (max-width: 544px) {
   .header {
-    min-height: 85px;
+    min-height: 83px;
+    padding: 0;
+  }
+
+  .header__bar {
+    align-items: center;
+    min-height: 83px;
   }
 
   .header__logo {
     width: 126px;
     height: 24px;
-    margin: 0 0 0 7px;
-  }
-
-  .header__user {
-    gap: 12px;
-    font-size: 14px;
-    line-height: 17px;
-  }
-
-  .header__email {
-    max-width: 160px;
   }
 
   .header__link {
+    min-width: auto;
     font-size: 14px;
     line-height: 17px;
+  }
+
+  /* No mobile, usuário logado usa o menu hamburguer */
+  .header__user {
+    display: none;
+  }
+
+  .header__hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    color: #fff;
+  }
+
+  /* Painel do menu — aparece ACIMA da barra (logo + hamburguer) */
+  .header__mobile-menu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding-top: 40px; /* 40px do topo da tela até o email (antes: 28 + 12) */
+    padding-bottom: 46px;
+    border-bottom: 1px solid rgba(84, 84, 84, 0.7);
+  }
+
+  .header__mobile-email {
+    color: #fff;
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+    text-align: center;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 12px; /* 12px do email até o Sair */
+  }
+
+  .header__mobile-signout {
+    background: transparent;
+    border: 0;
+    color: #a9a9a9;
+    font-family: "Inter", Arial, sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 22px;
+    padding: 0;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+
+  .header__mobile-signout:hover {
+    color: #fff;
   }
 }

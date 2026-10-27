@@ -1,3 +1,4 @@
+/* === DESKTOP (1280×720) === */
 .auth {
   flex: 1;
   display: flex;
@@ -5,9 +6,9 @@
   align-items: center;
   justify-content: flex-start;
   box-sizing: border-box;
-  padding: 60px 0 40px;
+  padding: 60px 0 80px;
   color: #fff;
-  font-family: Inter, sans-serif;
+  font-family: "Inter", Arial, sans-serif;
 }
 
 .auth__title {
@@ -15,8 +16,7 @@
   max-width: calc(100% - 60px);
   height: 29px;
   margin: 0 0 50px;
-
-  font-family: Inter, sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 24px;
   font-weight: 900;
   line-height: 29px;
@@ -34,21 +34,19 @@
 
 .auth__input {
   width: 100%;
-  height: 30px;
+  height: 27px;
   flex-shrink: 0;
   box-sizing: border-box;
   padding: 0 0 9px;
   margin: 0 0 30px;
-
   background: transparent;
   border: 0;
   border-bottom: 1px solid #ccc;
   border-radius: 0;
-
   color: #fff;
-  font-family: Inter, sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 17px;
   outline: none;
 }
@@ -62,24 +60,25 @@
   border-bottom-color: #fff;
 }
 
+.auth__input:last-of-type {
+  margin-bottom: 0;
+}
+
 .auth__submit {
   width: 100%;
-  height: 50px;
+  height: 58px;
   flex-shrink: 0;
   box-sizing: border-box;
   margin: auto 0 0;
   padding: 0;
-
   border: 0;
   border-radius: 2px;
   background: #fff;
   color: #000;
-
-  font-family: Inter, sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 18px;
   font-weight: 400;
-  line-height: 22px;
-
+  line-height: 44px;
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
@@ -95,15 +94,13 @@
   flex-shrink: 0;
   box-sizing: border-box;
   margin-top: 7px;
-
   color: #fff;
-  font-family: Inter, sans-serif;
+  font-family: "Inter", Arial, sans-serif;
   font-size: 14px;
   font-weight: 400;
   line-height: 17px;
   text-align: center;
   text-decoration: none;
-
   transition: opacity 0.2s ease;
 }
 
@@ -111,7 +108,7 @@
   opacity: 0.6;
 }
 
-/* Tablets */
+/* === TABLET (768px) — inalterado === */
 @media screen and (max-width: 768px) {
   .auth {
     padding-top: 40px;
@@ -133,10 +130,10 @@
   }
 }
 
-/* Mobile */
+/* === MOBILE (320×568) === */
 @media screen and (max-width: 480px) {
   .auth {
-    padding: 40px 0 20px;
+    padding: 40px 0 42px;
   }
 
   .auth__title {
@@ -144,16 +141,18 @@
     max-width: calc(100% - 34px);
     height: 48px;
     margin-bottom: 16px;
-
     font-size: 24px;
     font-weight: 900;
     line-height: 29px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
   }
 
   .auth__form {
     width: 260px;
     max-width: calc(100% - 34px);
-    flex: 0 0 auto;
+    flex: 1;
   }
 
   .auth__input {
@@ -164,15 +163,14 @@
     line-height: 17px;
   }
 
-  /* Distância exata entre o último input e o botão */
   .auth__input:last-of-type {
-    margin-bottom: 173px;
+    margin-bottom: 0;
   }
 
   .auth__submit {
     width: 100%;
     height: 46px;
-    margin-top: 0;
+    margin-top: auto;
     font-size: 16px;
     line-height: 20px;
   }
@@ -180,9 +178,8 @@
   .auth__link {
     width: 260px;
     max-width: calc(100% - 34px);
-    min-height: 17px;
+    min-height: 15px;
     margin-top: 20px;
-
     font-size: 12px;
     line-height: 15px;
   }

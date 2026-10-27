@@ -1,4 +1,7 @@
+/* === DESKTOP (430×330) === */
 .popup__content_type_tooltip {
+  width: 430px;
+  max-width: 430px;
   min-height: 330px;
   display: flex;
   align-items: center;
@@ -10,6 +13,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  width: 100%;
 }
 
 .info-tooltip__icon {
@@ -30,11 +34,33 @@
 }
 
 .info-tooltip__text {
+  width: 100%;
+  min-height: 58px;
   font-family: "Inter", Arial, sans-serif;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 900;
-  line-height: 24px;
+  line-height: 29px;
   color: #000;
   margin: 0;
-  max-width: 320px;
+}
+
+/* === MOBILE (280×308) === */
+@media screen and (max-width: 544px) {
+  .popup__content_type_tooltip {
+    width: 280px;
+    max-width: 280px;
+    min-height: 308px;
+  }
+
+  .info-tooltip__icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 32px;
+  }
+
+  .info-tooltip__text {
+    font-size: 18px;
+    line-height: 22px;
+    min-height: 44px;
+  }
 }

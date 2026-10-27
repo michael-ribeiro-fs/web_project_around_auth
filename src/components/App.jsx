@@ -27,25 +27,25 @@ function App() {
   // === Montagem: verifica token e carrega cards ===
   useEffect(() => {
     const jwt = getToken();
-    if (!jwt) {
-      setIsAuthChecked(true);
-      return;
-    }
 
-    auth
-      .checkToken(jwt)
-      .then((res) => {
-        setIsLoggedIn(true);
-        setEmail(res.data.email);
-        return api.getUserInfo();
-      })
-      .then((userData) => {
-        setCurrentUser(userData);
-        return api.getInitialCards();
-      })
-      .then((cardsData) => {
-        setCards(cardsData);
-      })
+    const checkAuth = jwt
+      ? auth
+          .checkToken(jwt)
+          .then((res) => {
+            setIsLoggedIn(true);
+            setEmail(res.data.email);
+            return api.getUserInfo();
+          })
+          .then((userData) => {
+            setCurrentUser(userData);
+            return api.getInitialCards();
+          })
+          .then((cardsData) => {
+            setCards(cardsData);
+          })
+      : Promise.resolve();
+
+    checkAuth
       .catch((err) => {
         console.error("[useEffect-mount]", err);
         localStorage.removeItem("jwt");

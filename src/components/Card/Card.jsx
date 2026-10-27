@@ -50,12 +50,15 @@ function Card({
       />
       <div className="card__description">
         <h2 className="card__title">{name}</h2>
-        <button
-          aria-label="Curtir"
-          type="button"
-          className={cardLikeButtonClassName}
-          onClick={handleLikeClick}
-        />
+        <div className="card__like-wrapper">
+          <button
+            aria-label="Curtir"
+            type="button"
+            className={cardLikeButtonClassName}
+            onClick={handleLikeClick}
+          />
+          <span className="card__like-count">{isLiked ? 1 : 0}</span>
+        </div>
       </div>
     </li>
   );

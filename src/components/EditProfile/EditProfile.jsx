@@ -1,24 +1,11 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
 function EditProfile() {
   const { currentUser, handleUpdateUser } = useContext(CurrentUserContext);
 
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-
-  useEffect(() => {
-    setName(currentUser.name || "");
-    setDescription(currentUser.about || "");
-  }, [currentUser]);
-
-  const handleNameChange = (e) => {
-    setName(e.target.value);
-  };
-
-  const handleDescriptionChange = (e) => {
-    setDescription(e.target.value);
-  };
+  const [name, setName] = useState(currentUser.name || "");
+  const [description, setDescription] = useState(currentUser.about || "");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,16 +19,16 @@ function EditProfile() {
         placeholder="Nome"
         type="text"
         value={name}
-        onChange={handleNameChange}
+        onChange={(e) => setName(e.target.value)}
       />
       <input
         className="popup__input popup__input_type_description"
         placeholder="Sobre mim"
         type="text"
         value={description}
-        onChange={handleDescriptionChange}
+        onChange={(e) => setDescription(e.target.value)}
       />
-      <button className="button popup__button" type="submit">
+      <button className="popup__button" type="submit">
         Salvar
       </button>
     </form>
