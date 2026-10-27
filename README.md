@@ -2,6 +2,8 @@
 
 Galeria fotográfica interativa com autenticação de usuários, desenvolvida com React e Vite. Permite criar uma conta, fazer login, visualizar e gerenciar cartões de lugares, curtir imagens e editar informações do perfil. O acesso à galeria é restrito a usuários autenticados.
 
+**Deploy:** [https://michael-ribeiro-fs.github.io/web_project_around_auth/](https://michael-ribeiro-fs.github.io/web_project_around_auth/)
+
 ## Funcionalidades
 
 - **Cadastro de usuários:** criação de conta com e-mail e senha.
