@@ -146,7 +146,7 @@
   cursor: not-allowed;
 }
 
-/* === MOBILE (320×568) === */
+/* === MOBILE === */
 @media screen and (max-width: 544px) {
   .popup {
     bottom: 112px;
@@ -167,7 +167,6 @@
     background-size: 20px 20px;
   }
 
-  /* X do InfoTooltip centralizado acima do popup (21px de gap) */
   .popup__content_type_tooltip .popup__close {
     right: auto;
     left: 50%;

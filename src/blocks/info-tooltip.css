@@ -1,4 +1,3 @@
-/* === DESKTOP (430×330) === */
 .popup__content_type_tooltip {
   width: 430px;
   max-width: 430px;
@@ -44,7 +43,7 @@
   margin: 0;
 }
 
-/* === MOBILE (280×308) === */
+/* === MOBILE === */
 @media screen and (max-width: 544px) {
   .popup__content_type_tooltip {
     width: 280px;

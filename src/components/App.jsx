@@ -24,7 +24,6 @@ function App() {
 
   const getToken = () => localStorage.getItem("jwt");
 
-  // === Montagem: verifica token e carrega cards ===
   useEffect(() => {
     const jwt = getToken();
 
@@ -59,7 +58,6 @@ function App() {
       });
   }, []);
 
-  // === Auth ===
   const handleRegister = ({ email: userEmail, password }) => {
     auth
       .register(userEmail, password)
@@ -99,7 +97,6 @@ function App() {
     navigate("/signin");
   };
 
-  // === Cards ===
   const handleCardLike = async (card) => {
     try {
       const newCard = await api.changeLikeCardStatus(card._id, !card.isLiked);
@@ -128,11 +125,9 @@ function App() {
     }
   };
 
-  // === Pop-ups ===
   const handleOpenPopup = (popupConfig) => setPopup(popupConfig);
   const handleClosePopup = () => setPopup(null);
 
-  // === Perfil (esperado falhar no backend atual — instruções §5) ===
   const handleUpdateUser = async (data) => {
     try {
       const newUser = await api.editProfile(data.name, data.about);

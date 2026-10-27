@@ -1,4 +1,3 @@
-/* === DESKTOP (1280×720) === */
 .auth {
   flex: 1;
   display: flex;
@@ -108,7 +107,7 @@
   opacity: 0.6;
 }
 
-/* === TABLET (768px) — inalterado === */
+/* === TABLET (768px) === */
 @media screen and (max-width: 768px) {
   .auth {
     padding-top: 40px;
