@@ -49,6 +49,10 @@ function App() {
       .catch((err) => {
         console.error("[useEffect-mount]", err);
         localStorage.removeItem("jwt");
+        setIsLoggedIn(false);
+        setEmail("");
+        setCurrentUser({});
+        setCards([]);
       })
       .finally(() => {
         setIsAuthChecked(true);
@@ -78,22 +82,7 @@ function App() {
       .then((data) => {
         if (!data.token) throw new Error("Token não recebido");
         localStorage.setItem("jwt", data.token);
-        return auth.checkToken(data.token);
-      })
-      .then((res) => {
-        setIsLoggedIn(true);
-        setEmail(res.data.email);
-        // Busca perfil completo no around-api (Sprint 14)
-        return api.getUserInfo();
-      })
-      .then((userData) => {
-        setCurrentUser(userData);
-        // Busca cards no around-api (Sprint 14)
-        return api.getInitialCards();
-      })
-      .then((cardsData) => {
-        setCards(cardsData);
-        navigate("/");
+        window.location.href = import.meta.env.BASE_URL;
       })
       .catch((err) => {
         console.error("[handleLogin]", err);

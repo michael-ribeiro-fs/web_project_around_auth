@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 import RemoveCard from "../RemoveCard/RemoveCard";
 
 function Card({
@@ -8,7 +10,9 @@ function Card({
   onOpenPopup,
   onClosePopup,
 }) {
+  const { currentUser } = useContext(CurrentUserContext);
   const isLiked = card.isLiked ?? false;
+  const isOwn = card.owner === currentUser?._id;
 
   const cardLikeButtonClassName = `card__like-button ${
     isLiked ? "card__like-button_is-active" : ""
@@ -42,12 +46,14 @@ function Card({
         alt={name}
         onClick={() => onCardClick(card)}
       />
-      <button
-        aria-label="Excluir cartão"
-        className="card__delete-button"
-        type="button"
-        onClick={handleDeleteClick}
-      />
+      {isOwn && (
+        <button
+          aria-label="Excluir cartão"
+          className="card__delete-button"
+          type="button"
+          onClick={handleDeleteClick}
+        />
+      )}
       <div className="card__description">
         <h2 className="card__title">{name}</h2>
         <div className="card__like-wrapper">
